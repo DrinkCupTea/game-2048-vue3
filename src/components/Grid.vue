@@ -19,7 +19,10 @@ onMounted(() => {
   <p id="title">2048</p>
   <div id="container">
     <div v-for="(row, row_index) in gameManager.grid.cells">
-      <Tile v-for="(tile, tile_index) in row" :tile="tile">{{ tile?.value}}</Tile>
+      <Tile
+        v-for="(tile, tile_index) in row"
+        :tile="tile"
+      >{{ tile?.value}}</Tile>
     </div>
   </div>
   <button type="button" @click="addTile">Add</button>

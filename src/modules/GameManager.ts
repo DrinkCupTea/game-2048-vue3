@@ -12,6 +12,7 @@ export default class GameManager {
 
   constructor(size: number = 4) {
     this.size = size;
+    this.setup();
   }
 
   setup(): void {
