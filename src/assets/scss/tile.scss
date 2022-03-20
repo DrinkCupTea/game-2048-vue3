@@ -1,0 +1,95 @@
+div {
+  $edge: 7vw;
+  color: white;
+  vertical-align: middle;
+  font-size: 5vw;
+  font-weight: bold;
+  // line-height: $edge;
+  border-radius: 1vw;
+  width: $edge;
+  height: $edge;
+  position: absolute;
+}
+
+.tile-2 {
+  background-color: #ffbb88;
+}
+
+.tile-4 {
+  background-color: #ff9966;
+}
+
+.tile-8 {
+  background-color: #ff7755;
+}
+
+.tile-16 {
+  background-color: #ff5533;
+}
+
+.tile-32{
+  background-color: #ff0000;
+}
+
+@for $row from 0 to 4 {
+  @for $column from 0 to 4 {
+    .position-#{$row}-#{$column}:not(.isMoving) {
+      top: 8vw * $row + 1vw ;
+      left: 8vw * $column + 1vw;
+    }
+  }
+}
+
+@for $fromRow from 0 to 4 {
+  @for $toRow from 0 to 4 {
+    $name: row_from_#{$fromRow}_to_#{$toRow};
+
+    @if $fromRow == $toRow {
+      .#{$name} {
+        top: 8vw * $toRow + 1vw;
+      }
+    } @else {
+      .#{$name} {
+        animation-name: $name;
+        animation-duration: 200ms;
+        animation-fill-mode: forwards;
+      }
+
+      @keyframes #{$name} {
+        from {
+          top: 8vw * $fromRow + 1vw;
+        }
+        to {
+          top: 8vw * $toRow + 1vw;
+        }
+      }
+    }
+  }
+}
+
+@for $fromColumn from 0 to 4 {
+  @for $toColumn from 0 to 4 {
+    $name: column_from_#{$fromColumn}_to_#{$toColumn};
+
+    @if $fromColumn == $toColumn {
+      .#{$name} {
+        left: 8vw * $toColumn + 1vw;
+      }
+    } @else {
+      .#{$name} {
+        animation-name: $name;
+        animation-duration: 200ms;
+        animation-fill-mode: forwards;
+      }
+
+      @keyframes #{$name} {
+        from {
+          left: 8vw * $fromColumn + 1vw;
+        }
+        to {
+          left: 8vw * $toColumn + 1vw;
+        }
+      }
+    }
+  }
+}

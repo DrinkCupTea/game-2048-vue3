@@ -1,0 +1,36 @@
+#container {
+  background-color: rgba(230, 230, 230, 0.75);
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 1vw;
+  padding-left: 1vw;
+  width: 32vw;
+  height: 32vw;
+  border-radius: 1vw;
+  position: relative;
+}
+
+#title {
+  color: white;
+  font-size: large;
+}
+
+.appear-enter-active {
+  animation: appear 300ms ease-in-out forwards;
+}
+
+.appear-leave-active {
+  animation: appear 300ms ease-in-out reverse;
+}
+
+@keyframes appear{
+  0% {
+    scale: 0;
+  }
+  90% {
+    scale: 1.15;
+  }
+  100% {
+    scale: 1;
+  }
+}
