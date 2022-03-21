@@ -5,12 +5,13 @@ export default class Tile {
   position: Position;
   value: number;
   previousPosition: Position | null;
-  // mergedFrom = null
+  merged: boolean;
 
   constructor(position: Position, value: number) {
     this.position         = position;
     this.value            = value;
     this.previousPosition = null;
+    this.merged = false;
   }
 
   savePosition(): void {

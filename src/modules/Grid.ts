@@ -19,6 +19,17 @@ export default class Grid {
     }
   }
 
+  inBound(position: Position): boolean {
+    return position.row >= 0 &&
+      position.row < this.size &&
+      position.column >= 0 &&
+      position.column < this.size;
+  }
+
+  getTileByPosition(position: Position): Tile | null {
+    return this.cells[position.row][position.column];
+  }
+
   randomAvailableCell(): Position {
     const cells: ReadonlyArray<Position> = this.availableCells();
     return cells[Math.floor(Math.random() * cells.length)];

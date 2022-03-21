@@ -12,4 +12,13 @@ export default class Position {
     return `tile-position-${this.row}-${this.column}`
   }
 
+  equal(position: Position): boolean {
+    return this.row === position.row && this.column === position.column;
+  }
+
+  add(position: Position): void {
+    this.row    += position.row;
+    this.column += position.column;
+  }
+
 }
