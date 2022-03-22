@@ -1,18 +1,26 @@
 #container {
+  $edge: 7vw;
   background-color: rgba(230, 230, 230, 0.75);
   margin-left: auto;
   margin-right: auto;
   padding-top: 1vw;
   padding-left: 1vw;
-  width: 32vw;
-  height: 32vw;
+  width: 4 * $edge + 4vw;
+  height: 4 * $edge + 4vw;
   border-radius: 1vw;
   position: relative;
 }
 
 #title {
   color: white;
-  font-size: large;
+  font-size: 2.5vw;
+  margin-bottom: 0;
+}
+
+#score {
+  color: white;
+  font-size: 2vw;
+  margin-top: 0;
 }
 
 .appear-enter-active {

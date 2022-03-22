@@ -117,6 +117,7 @@ export default class GameManager {
       if (tile !== null && tile.merged) {
         tile.merged = false;
         tile.value  = tile.value * 2;
+        this.score += tile.value;
       }
     });
   }
