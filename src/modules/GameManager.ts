@@ -9,7 +9,6 @@ export default class GameManager {
   score    : number  = 0;
   grid     : Grid    = new Grid(this.size);
   gameOver : boolean = false;
-  shouldAdd: boolean = false;
   
 
   constructor(size: number = 4) {
@@ -73,7 +72,7 @@ export default class GameManager {
     traversal[0].forEach((row: number) => {
       traversal[1].forEach((column: number) => {
         const tileToMove = this.grid.cells[row][column];
-        if (tileToMove !== null) {
+        if (tileToMove instanceof Tile) {
           moved = this.moveTile(tileToMove, direction) || moved;
         }
       });
@@ -87,10 +86,8 @@ export default class GameManager {
     nextPosition.add(direction);
 
     while(this.grid.inBound(nextPosition)) {
-      console.log(nextPosition.toString());
       const currentTile = this.grid.getTileByPosition(nextPosition);
-      console.log(currentTile);
-      if (currentTile !== null) {
+      if (currentTile instanceof Tile) {
         if (currentTile.merged === false && currentTile.value === tile.value) {
           tile.merged = true;
           position.add(direction);
@@ -106,20 +103,45 @@ export default class GameManager {
       tile.savePreviousPosition();
       tile.updatePosition(position);
       this.grid.clearTileByPosition(tile.previousPosition);
-      this.grid.setTileByPosition(tile, position);
+      this.grid.insertTile(tile);
       return true;
     }
     return false;
   }
 
   merge() {
-    this.grid.eachCell((position: Position, tile: Tile) => {
-      if (tile !== null && tile.merged) {
+    this.grid.eachCell((tile) => {
+      if (tile instanceof Tile && tile.merged) {
         tile.merged = false;
         tile.value  = tile.value * 2;
         this.score += tile.value;
       }
     });
+  }
+
+  canMergeToAround(tile: Tile): boolean {
+    const dirs: Array<Array<number>> = [[0, 1], [0, -1], [1, 0], [-1, 0]];
+    for (let i = 0; i < 4; i++) {
+      const position: Position = new Position(tile.position.row + dirs[i][0], tile.position.column + dirs[i][1]);
+      if (this.grid.inBound(position) && this.grid.getTileByPosition(position)?.value === tile.value) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  gameIsOver(): boolean {
+    if (this.grid.hasAvailableCells()) {
+      return false;
+    }
+
+    let isOver = true;
+    this.grid.eachCell((tile) => {
+      if (tile instanceof Tile && this.canMergeToAround(tile)) {
+        isOver = false;
+      }
+    });
+    return isOver;
   }
 
 }

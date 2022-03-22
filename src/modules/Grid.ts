@@ -1,6 +1,10 @@
 import Position from "./Position";
 import Tile from "./Tile";
 
+interface Callback {
+  (tile: Tile | null, position: Position): void;
+}
+
 export default class Grid {
   size : number;
   cells: Array<Array<Tile | null>> = [];
@@ -26,16 +30,16 @@ export default class Grid {
       position.column < this.size;
   }
 
+  insertTile(tile: Tile): void {
+    this.cells[tile.position.row][tile.position.column] = tile;
+  }
+
   getTileByPosition(position: Position): Tile | null {
     return this.cells[position.row][position.column];
   }
 
   clearTileByPosition(position: Position): void {
     this.cells[position.row][position.column] = null;
-  }
-
-  setTileByPosition(tile: Tile, position: Position): void {
-    this.cells[position.row][position.column] = tile;
   }
 
   randomAvailableCell(): Position {
@@ -45,28 +49,31 @@ export default class Grid {
 
   availableCells(): Array<Position> {
     let cells: Array<Position> = [];
-    this.eachCell((position: Position, tile: Tile) => {
-      if (!tile) {
+    this.eachCell((tile, position) => {
+      if (!(tile instanceof Tile)) {
         cells.push(position);
       }
     });
     return cells;
   }
 
-  eachCell(callback: Function): void {
+  eachCell(callback: Callback): void {
     for (let row = 0; row < this.size; row++) {
       for (let column = 0; column < this.size; column++) {
-        callback(new Position(row, column) , this.cells[row][column]);
+        callback(this.cells[row][column], new Position(row, column));
       }
     }
   }
 
   hasAvailableCells(): boolean {
-    return this.availableCells().length > 0;
-  }
-
-  insertTile(tile: Tile): void {
-    this.cells[tile.position.row][tile.position.column] = tile;
+    for (let row = 0; row < this.size; row++) {
+      for (let column = 0; column < this.size; column++) {
+        if (!(this.cells[row][column] instanceof Tile)) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
 }

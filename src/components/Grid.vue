@@ -15,6 +15,10 @@ function keyHandler(event: KeyboardEvent) {
   if (moved) {
     gameManager.value.merge();
     gameManager.value.addRandomTile();
+    gameManager.value.gameOver = gameManager.value.gameIsOver();
+    if (gameManager.value.gameOver) {
+      console.log("GAME OVER");
+    }
   }
 }
 
