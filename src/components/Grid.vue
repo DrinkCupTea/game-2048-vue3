@@ -15,7 +15,11 @@ function keyHandler(event: KeyboardEvent) {
     return;
   }
   event.preventDefault();
-  gameManager.value.move(direction);
+  let moved: boolean = gameManager.value.move(direction);
+  if (moved) {
+    gameManager.value.merge();
+    gameManager.value.addRandomTile();
+  }
 }
 
 onMounted(() => {

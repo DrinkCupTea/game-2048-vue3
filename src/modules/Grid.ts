@@ -30,6 +30,14 @@ export default class Grid {
     return this.cells[position.row][position.column];
   }
 
+  clearTileByPosition(position: Position): void {
+    this.cells[position.row][position.column] = null;
+  }
+
+  setTileByPosition(tile: Tile, position: Position): void {
+    this.cells[position.row][position.column] = tile;
+  }
+
   randomAvailableCell(): Position {
     const cells: ReadonlyArray<Position> = this.availableCells();
     return cells[Math.floor(Math.random() * cells.length)];

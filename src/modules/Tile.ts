@@ -4,17 +4,17 @@ export default class Tile {
 
   position: Position;
   value: number;
-  previousPosition: Position | null;
+  previousPosition: Position;
   merged: boolean;
 
   constructor(position: Position, value: number) {
     this.position         = position;
     this.value            = value;
-    this.previousPosition = null;
+    this.previousPosition = position;
     this.merged = false;
   }
 
-  savePosition(): void {
+  savePreviousPosition(): void {
     this.previousPosition = this.position;
   }
 

@@ -5,12 +5,12 @@ import Tile from "./Tile";
 
 export default class GameManager {
 
-  size    : number  = 4;
-  score   : number  = 0;
-  gameOver: boolean = false;
-  won     : boolean = false;
-  grid    : Grid    = new Grid(this.size);
-  tiles   : Array<Tile> = [];
+  size     : number  = 4;
+  score    : number  = 0;
+  grid     : Grid    = new Grid(this.size);
+  gameOver : boolean = false;
+  shouldAdd: boolean = false;
+  
 
   constructor(size: number = 4) {
     this.size = size;
@@ -20,7 +20,6 @@ export default class GameManager {
   setup(): void {
     this.score    = 0;
     this.gameOver = false;
-    this.won      = false;
     this.addRandomTile();
   }
 
@@ -29,7 +28,6 @@ export default class GameManager {
       const value: number = Math.random() < 0.7 ? 2 : 4;
       const tile = new Tile(this.grid.randomAvailableCell(), value);
       this.grid.insertTile(tile);
-      this.tiles.push(tile);
     }
   }
 
@@ -69,19 +67,21 @@ export default class GameManager {
     return traversal;
   }
 
-  move(direction: Position) {
+  move(direction: Position): boolean {
+    let moved: boolean = false;
     const traversal: Array<Array<number>> = this.buildTraversal(direction);
     traversal[0].forEach((row: number) => {
       traversal[1].forEach((column: number) => {
         const tileToMove = this.grid.cells[row][column];
         if (tileToMove !== null) {
-          this.setNextPosition(tileToMove, direction);
+          moved = this.moveTile(tileToMove, direction) || moved;
         }
       });
     });
+    return moved;
   }
 
-  setNextPosition(tile: Tile, direction: Position): void {
+  moveTile(tile: Tile, direction: Position): boolean{
     let nextPosition: Position = new Position(tile.position.row, tile.position.column);
     let position: Position = new Position(tile.position.row, tile.position.column);
     nextPosition.add(direction);
@@ -92,7 +92,7 @@ export default class GameManager {
       console.log(currentTile);
       if (currentTile !== null) {
         if (currentTile.merged === false && currentTile.value === tile.value) {
-          currentTile.merged = true;
+          tile.merged = true;
           position.add(direction);
         }
         break;
@@ -100,7 +100,25 @@ export default class GameManager {
       nextPosition.add(direction);
       position.add(direction);
     }
-    tile.savePosition();
-    tile.updatePosition(position);
+
+    // If position changed update the tile and the grid
+    if (!position.equal(tile.position)) {
+      tile.savePreviousPosition();
+      tile.updatePosition(position);
+      this.grid.clearTileByPosition(tile.previousPosition);
+      this.grid.setTileByPosition(tile, position);
+      return true;
+    }
+    return false;
   }
+
+  merge() {
+    this.grid.eachCell((position: Position, tile: Tile) => {
+      if (tile !== null && tile.merged) {
+        tile.merged = false;
+        tile.value  = tile.value * 2;
+      }
+    });
+  }
+
 }
