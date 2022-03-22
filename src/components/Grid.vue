@@ -5,10 +5,6 @@ import Tile from './Tile.vue';
 
 const gameManager = ref(new GameManager());
 
-function addTile() {
-  gameManager.value.addRandomTile();
-};
-
 function keyHandler(event: KeyboardEvent) {
   const direction = gameManager.value.getDirection(event.key);
   if (direction === undefined) {
@@ -30,6 +26,7 @@ onMounted(() => {
 <template>
 <div>
   <p id="title">2048</p>
+  <p id="score">score {{ gameManager.score }}</p>
   <div id="container">
     <div v-for="(row, row_index) in gameManager.grid.cells" :key="row_index">
       <Tile
@@ -39,7 +36,6 @@ onMounted(() => {
       >{{ tile?.value}}</Tile>
     </div>
   </div>
-  <button type="button" @click="addTile">Add</button>
 </div>
 </template>
 
