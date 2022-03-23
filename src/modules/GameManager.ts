@@ -19,6 +19,7 @@ export default class GameManager {
   setup(): void {
     this.score    = 0;
     this.gameOver = false;
+    this.grid.clearCells();
     this.addRandomTile();
   }
 

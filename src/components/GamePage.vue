@@ -6,6 +6,9 @@ import Tile from './Tile.vue';
 const gameManager = ref(new GameManager());
 
 function keyHandler(event: KeyboardEvent) {
+  if (gameManager.value.gameOver) {
+    return;
+  }
   const direction = gameManager.value.getDirection(event.key);
   if (direction === undefined) {
     return;
@@ -16,9 +19,6 @@ function keyHandler(event: KeyboardEvent) {
     gameManager.value.merge();
     gameManager.value.addRandomTile();
     gameManager.value.gameOver = gameManager.value.gameIsOver();
-    if (gameManager.value.gameOver) {
-      console.log("GAME OVER");
-    }
   }
 }
 
@@ -39,6 +39,9 @@ onMounted(() => {
         :tile="tile"
       >{{ tile?.value}}</Tile>
     </div>
+  </div>
+  <div id="gameOver" v-if="gameManager.gameOver">
+    <button @click="gameManager.setup()"><span>Restart </span></button>
   </div>
 </div>
 </template>

@@ -76,4 +76,12 @@ export default class Grid {
     return false;
   }
 
+  clearCells(): void {
+    for (let row = 0; row < this.size; row++) {
+      for (let column = 0; column < this.size; column++) {
+        this.cells[row][column] = null;
+      }
+    }
+  }
+
 }
