@@ -74,23 +74,3 @@
   font-size: 2vw;
   margin-top: 0;
 }
-
-.appear-enter-active {
-  animation: appear 300ms ease-in-out forwards;
-}
-
-.appear-leave-active {
-  animation: appear 300ms ease-in-out reverse;
-}
-
-@keyframes appear{
-  0% {
-    scale: 0;
-  }
-  90% {
-    scale: 1.15;
-  }
-  100% {
-    scale: 1;
-  }
-}
