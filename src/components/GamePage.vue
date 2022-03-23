@@ -11,8 +11,8 @@ function keyHandler(event: KeyboardEvent) {
     return;
   }
   event.preventDefault();
-  let moved: boolean = gameManager.value.move(direction);
-  if (moved) {
+  let hasMoved: boolean = gameManager.value.move(direction);
+  if (hasMoved) {
     gameManager.value.merge();
     gameManager.value.addRandomTile();
     gameManager.value.gameOver = gameManager.value.gameIsOver();

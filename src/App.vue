@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Grid from './components/Grid.vue';
+import Grid from './components/GamePage.vue';
 </script>
 
 <template>
