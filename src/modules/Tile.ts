@@ -1,25 +1,54 @@
-import Position from './Position'
+import { Guid } from 'guid-typescript';
+import Position from './Position';
 
 export default class Tile {
 
+  static ANIMATION_NONE  : string = '';
+  static ANIMATION_APPEAR: string = 'appear';
+
+  id           : string;
+  value        : number;
+
+  mergedOut: boolean;
+  mergedIn : boolean;
+
+  show         : boolean;
+  animationName: string;
+
   position: Position;
-  value: number;
-  previousPosition: Position;
-  merged: boolean;
+  leaveAt : Position;
 
   constructor(position: Position, value: number) {
-    this.position         = position;
-    this.value            = value;
-    this.previousPosition = position;
-    this.merged = false;
-  }
+    this.id       = Guid.create().toString();
+    this.value    = value;
 
-  savePreviousPosition(): void {
-    this.previousPosition = this.position;
-  }
+    this.mergedOut = false;
+    this.mergedIn  = false;
 
-  updatePosition(position: Position): void {
+    this.show     = true;
+    this.animationName = Tile.ANIMATION_NONE;
+
     this.position = position;
+    this.leaveAt  = position;
+  }
+
+  shouldMove(): boolean {
+    return !this.position.equal(this.leaveAt);
+  }
+
+  leaveGrid(): void {
+    if (this.position.row !== this.leaveAt.row) {
+      this.animationName = `row-from-${this.position.row}-to-${this.leaveAt.row}`;
+    }
+    if (this.position.column !== this.leaveAt.column) {
+      this.animationName = `column-from-${this.position.column}-to-${this.leaveAt.column}`;
+    }
+    this.show = false;
+  }
+
+  merge(): void {
+    this.mergedIn = false;
+    this.value *= 2;
   }
 
 }

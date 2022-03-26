@@ -1,25 +1,28 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, Ref, ref } from 'vue';
 import GameManager from '../modules/GameManager';
-import Tile from './Tile.vue';
+import Tile from '../modules/Tile';
+import GameTile from './GameTile.vue';
 
-const gameManager = ref(new GameManager());
+const gameManager: Ref<GameManager> = ref(new GameManager());
+
+function tileAfterMove(tile: Tile) {
+  gameManager.value.afterMove(tile);
+}
+
+function isAvaliableKey(key: string): boolean {
+  return key === 'ArrowUp'
+      || key === 'ArrowDown'
+      || key === 'ArrowLeft'
+      || key === 'ArrowRight';
+}
 
 function keyHandler(event: KeyboardEvent) {
-  if (gameManager.value.gameOver) {
-    return;
-  }
-  const direction = gameManager.value.getDirection(event.key);
-  if (direction === undefined) {
+  if (gameManager.value.gameOver || !isAvaliableKey(event.key)) {
     return;
   }
   event.preventDefault();
-  let hasMoved: boolean = gameManager.value.move(direction);
-  if (hasMoved) {
-    gameManager.value.merge();
-    gameManager.value.addRandomTile();
-    gameManager.value.gameOver = gameManager.value.gameIsOver();
-  }
+  gameManager.value.move(event.key);
 }
 
 onMounted(() => {
@@ -32,13 +35,13 @@ onMounted(() => {
   <p id="title">2048</p>
   <p id="score">score {{ gameManager.score }}</p>
   <div id="container">
-    <div v-for="(row, row_index) in gameManager.grid.cells" :key="row_index">
-      <Tile
-        v-for="(tile, tile_index) in row"
-        :key="row_index + '_' + tile_index"
-        :tile="tile"
-      >{{ tile?.value}}</Tile>
-    </div>
+    <GameTile
+      v-for="tile in gameManager.grid.tiles"
+      :key="tile.id.toString()"
+      :tile="tile"
+      @after-move="tileAfterMove(tile)"
+    >
+    </GameTile>
   </div>
   <div id="gameOver" v-if="gameManager.gameOver">
     <button @click="gameManager.setup()"><span>Restart </span></button>

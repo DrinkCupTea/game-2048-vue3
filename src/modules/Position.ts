@@ -17,8 +17,13 @@ export default class Position {
   }
 
   add(position: Position): void {
-    this.row    += position.row;
-    this.column += position.column;
+      this.row    += position.row;
+      this.column += position.column;
+  }
+
+  sub(position: Position): void {
+      this.row    -= position.row;
+      this.column -= position.column;
   }
 
 }
