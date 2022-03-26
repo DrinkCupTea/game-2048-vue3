@@ -1,5 +1,3 @@
-import { stringifyStyle } from "@vue/shared";
-import { getTransitionRawChildren } from "vue";
 import Grid from "./Grid";
 import Position from "./Position";
 import Tile from "./Tile";
@@ -82,7 +80,7 @@ export default class GameManager {
 
   move(key: string): void {
     if (this.isMoving) {
-      console.log('Is Moving!');
+      console.warn('Is Moving!');
       return;
     };
     this.isMoving = true;
@@ -120,7 +118,7 @@ export default class GameManager {
       const otherTile = this.grid.getTileByPosition(moveTo);
       moveTo.row = otherTile.leaveAt.row;
       moveTo.column = otherTile.leaveAt.column;
-      // If other tile is not merged and can merge to other tile
+      // If other tile is not merged and can merge to it
       if (!otherTile.mergedOut && !otherTile.mergedIn && otherTile.value === tile.value) {
         // Can merge
         // Set merge flag
@@ -138,7 +136,6 @@ export default class GameManager {
     }
 
     tile.leaveAt = moveTo;
-    // console.log(tile.id, tile.shouldMove());
   }
 
   moveAnimation() {
@@ -150,6 +147,10 @@ export default class GameManager {
         this.grid.newTiles.push(curTile);
       }
     });
+    if (this.numOfMovingTiles === 0) {
+      this.grid.newTiles = [];
+      this.isMoving = false;
+    }
   }
 
   afterMove(tile: Tile) {
