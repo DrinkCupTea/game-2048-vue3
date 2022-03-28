@@ -27,8 +27,47 @@ div {
   background-color: #ff5533;
 }
 
-.tile-32{
+.tile-32 {
   background-color: #ff0000;
+}
+
+.tile-64 {
+  background-color: #207f4a;
+}
+
+.tile-128 {
+  background-color: #20894d;
+  font-size: 3.7vw;
+}
+
+.tile-256 {
+  background-color: #41ae3c;
+  font-size: 3.7vw;
+}
+
+.tile-512 {
+  background-color: #45b787;
+  font-size: 3.7vw;
+}
+
+.tile-1024 {
+  background-color: #57c3c2;
+  font-size: 3vw;
+}
+
+.tile-2048 {
+  background-color: #0f95b0;
+  font-size: 3vw;
+}
+
+.tile-4096 {
+  background-color: #2376b7;
+  font-size: 3vw;
+}
+
+.tile-8192 {
+  background-color: #11659a;
+  font-size: 3vw;
 }
 
 @for $row from 0 to 4 {
