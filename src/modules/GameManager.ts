@@ -24,7 +24,7 @@ export default class GameManager {
   setup(): void {
     this.score    = 0;
     this.gameOver = false;
-    this.grid.tiles = [];
+    this.clearOldTiles();
     this.addRandomTile();
   }
 
@@ -168,17 +168,9 @@ export default class GameManager {
   }
 
   afterAllMoving() {
-    let curTile = this.grid.tiles.shift();
-    while(curTile instanceof Tile) {
-      this.grid.removeTile(curTile);
-      curTile = this.grid.tiles.shift();
-    }
 
-    curTile = this.grid.newTiles.shift();
-    while (curTile instanceof Tile) {
-      this.grid.addTile(curTile);
-      curTile = this.grid.newTiles.shift();
-    }
+    this.clearOldTiles();
+    this.addNewTiles();
 
     this.grid.tiles.forEach((t) => {
       if (t.mergedIn) {
@@ -188,6 +180,22 @@ export default class GameManager {
     });
     this.addRandomTile();
     this.isMoving = false;
+  }
+
+  clearOldTiles() {
+    let curTile = this.grid.tiles.shift();
+    while (curTile instanceof Tile) {
+      this.grid.removeTile(curTile);
+      curTile = this.grid.tiles.shift();
+    }
+  }
+
+  addNewTiles() {
+    let curTile = this.grid.newTiles.shift();
+    while (curTile instanceof Tile) {
+      this.grid.addTile(curTile);
+      curTile = this.grid.newTiles.shift();
+    }
   }
 
   ifGameOver(): boolean {
