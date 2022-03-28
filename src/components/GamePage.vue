@@ -3,6 +3,7 @@ import { onMounted, Ref, ref } from 'vue';
 import GameManager from '../modules/GameManager';
 import Tile from '../modules/Tile';
 import GameTile from './GameTile.vue';
+import UserPage from './UserPage.vue';
 
 const gameManager: Ref<GameManager> = ref(new GameManager());
 
@@ -46,6 +47,7 @@ onMounted(() => {
   <div id="gameOver" v-if="gameManager.gameOver">
     <button @click="gameManager.setup()"><span>Restart </span></button>
   </div>
+  <UserPage></UserPage>
 </div>
 </template>
 
