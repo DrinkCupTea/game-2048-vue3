@@ -1,45 +1,60 @@
 import Grid from "./Grid";
 import Position from "./Position";
 import Tile from "./Tile";
+import Step from "./Step";
 
 export default class GameManager {
 
   size     : number;
-  score    : number;
+  score    : number = 0;
   grid     : Grid;
-  gameOver : boolean;
+  gameOver : boolean = false;
 
   numOfMovingTiles: number  = 0;
   isMoving        : boolean = false;
 
-  
+  username: string      = '';
+  steps   : Array<Step> = [];
+  isReplaying: boolean = false;
+
   constructor(size: number = 4) {
     this.size     = size;
-    this.score    = 0;
     this.grid     = new Grid(this.size);
-    this.gameOver = false;
     this.setup();
   }
 
   setup(): void {
     this.score    = 0;
     this.gameOver = false;
+    this.steps    = [];
     this.clearOldTiles();
     this.addRandomTile();
   }
 
+  addCerainTile(tileRow: number, tileColumn: number, tileValue: number) {
+    const position: Position = new Position(tileRow, tileColumn);
+    const tile: Tile = new Tile(position, tileValue);
+    this.addTile(tile);
+  }
+
   addRandomTile(): void {
-    if (this.grid.hasAvailableCells()) {
+    if (!this.isReplaying && this.grid.hasAvailableCells()) {
       const position: Position = this.grid.randomAvailableCell();
       const value: number      = Math.random() < 0.7 ? 2 : 4;
       const tile : Tile        = new Tile(position, value);
-      tile.show = false;
-      tile.animationName = Tile.ANIMATION_APPEAR;
-      this.grid.addTile(tile);
-      tile.show = true;
-
-      this.gameOver = this.ifGameOver();
+      this.addTile(tile);
     }
+  }
+
+  addTile(tile: Tile) {
+    tile.show = false;
+    tile.animationName = Tile.ANIMATION_APPEAR;
+    this.grid.addTile(tile);
+    tile.show = true;
+
+    this.steps.push(new Step(this.steps.length, tile.position.row, tile.position.column, tile.value));
+
+    this.gameOver = this.ifGameOver();
   }
 
   getDirection(key: string): Position {
@@ -79,6 +94,10 @@ export default class GameManager {
     return traversal;
   }
 
+  uploadMove() {
+
+  }
+
   move(key: string): void {
     if (this.isMoving) {
       console.warn('Is Moving!');
@@ -88,7 +107,10 @@ export default class GameManager {
     const direction = this.getDirection(key);
     const traversal: Array<Array<number>> = this.buildTraversal(direction);
     this.moveAction(direction, traversal);
-    this.moveAnimation();
+    const hasMoved: boolean = this.moveAnimation();
+    if (hasMoved) {
+      this.steps[this.steps.length - 1].addNextMove(key);
+    }
   }
 
   moveAction(direction: Position, traversal: Array<Array<number>>): void{
@@ -139,7 +161,7 @@ export default class GameManager {
     tile.leaveAt = moveTo;
   }
 
-  moveAnimation() {
+  moveAnimation(): boolean {
     this.grid.tiles.forEach((curTile) => {
       if (curTile.shouldMove()) {
         this.numOfMovingTiles += 1;
@@ -151,7 +173,9 @@ export default class GameManager {
     if (this.numOfMovingTiles === 0) {
       this.grid.newTiles = [];
       this.isMoving = false;
+      return false;
     }
+    return true;
   }
 
   afterMove(tile: Tile) {

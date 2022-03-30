@@ -45,9 +45,9 @@ onMounted(() => {
     </GameTile>
   </div>
   <div id="gameOver" v-if="gameManager.gameOver">
-    <button @click="gameManager.setup()"><span>Restart </span></button>
+    <button @click="gameManager.setup"><span>Restart </span></button>
   </div>
-  <UserPage></UserPage>
+  <UserPage :gameManager="gameManager"></UserPage>
 </div>
 </template>
 
