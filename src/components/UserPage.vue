@@ -62,6 +62,7 @@ async function replay(gameManager: GameManager) {
   actionStep(gameManager, steps[0]);
   const time = setInterval(() => {
     if (steps[i].nextMove === '') {
+      gameManager.isReplaying = false;
       clearInterval(time);
     }
     actionStep(gameManager, steps[i]);
